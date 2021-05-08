@@ -1,8 +1,25 @@
-const TIME_TO_WAIT = 600*1000;
+import { ethers } from "ethers";
+
+const BSC_NODE_URL = process.env.BSC_NODE_URL || 'https://bsc-dataseed.binance.org/';
+
+const provider = new ethers.providers.JsonRpcProvider(BSC_NODE_URL);
+const signer = provider.getSigner();
+
+const BSC_WALLET_MNEMONIC = process.env.BSC_WALLET_MNEMONIC;
+
+const wallet = ethers.Wallet.fromMnemonic(BSC_WALLET_MNEMONIC);
+
+//const TIME_TO_WAIT = (60*60*24)*1000;
+const TIME_TO_WAIT = (10)*1000;
 let addressList = [{}];
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
     let sentSuccess;
+    /*
+    if(provider.getBalance('0xC61fF36ce9aC0EBCc1ca63ECE752a1fc2c89e2c6','PULL') < 1000) {
+        res.status(200).json({ text: "out of funds" });
+    }
+    */
     if(validateAddress(req.body.address)) {
         sentSuccess = sendFunds(req.body.address);
     }
@@ -17,7 +34,9 @@ export default function handler(req, res) {
     console.log("Time 2:",time2);
     console.log("Time taken:",time2-time1);
     */
-    res.status(200).json({ text: sentSuccess })
+    console.log(await provider.getBlockNumber());
+    console.log(await provider.listAccounts());
+    res.status(200).json({ text: sentSuccess });
   }
 
 function validateAddress(address) {
@@ -40,6 +59,9 @@ function validateAddress(address) {
 
 async function sendFunds(address) {
     console.log("Sending funds to",address);
+
+
+
     let addressEntry = {
         "address": address,
         "timestamp":Date.now()
