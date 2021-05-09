@@ -42,7 +42,11 @@ function AddToMetaMask() {
   const tokenAddress = '0xB44cf912E9D0341e92f64f4a0642393B7f3526C4';
   const tokenSymbol = 'PULL';
   const tokenDecimals = 18;
-  const tokenImage = window.location.protocol + "//" + window.location.host+'/images/rugpull.png';
+  if(window !== undefined) {
+    const tokenImage = window.location.protocol + "//" + window.location.host+'/images/rugpull.png';
+  } else {
+    const tokenImage = '';
+  }
   //console.log(tokenImage);
   const tryAdd = async () => {
     try {
