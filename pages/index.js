@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react';
 
 function Form() {
-  const [data, setData] = useState({'status':''});
+  const [data, setData] = useState({'result':false,'showError':false});
   const registerUser = async event => {
     event.preventDefault()
 
@@ -22,8 +22,12 @@ function Form() {
     )
 
     const result = await res.json()
-    console.log(result.text);
-    //setData({'status':result});
+    console.log("True or False?", (result.result ? "True" : "False"));
+    let tmpData = {
+      result: result.result,
+      showError: true
+    };
+    setData(tmpData);
     return result;
   }
 
@@ -31,15 +35,15 @@ function Form() {
     <form onSubmit={registerUser}>
       <label htmlFor="rcpAddress">BSC Address: </label>
       <input id="rcpAddress" name="rcpAddress" type="text" autoComplete="rcpAddress" size="42" pattern="^0x[a-fA-F0-9]{40}$" required />
-      <button type="submit">Send</button>
-      <label id="resultStatus">{data.status}</label>
+      <button type="submit">Send</button><br/>
+      {data.showError && <center><label id="resultStatus" ><b>{data.result ? "Success" : "Error"}</b></label></center> }
     </form>
   )
 }
 
 
-function AddToMetaMask() {
-  const tokenAddress = '0xB44cf912E9D0341e92f64f4a0642393B7f3526C4';
+function AddToMetaMask(args) {
+  const tokenAddress = args.contractAddress;
   const tokenSymbol = 'PULL';
   const tokenDecimals = 18;
   let tokenImage = '';
@@ -80,7 +84,7 @@ function AddToMetaMask() {
   )
 }
 
-export default function Home() {
+export default function Home(props) {
   return (
     <div className="container">
       <Head>
@@ -97,8 +101,9 @@ export default function Home() {
         <p className="description">
           Get started by entering a BSC address
         </p>
+        <small>2 hour delay per address</small>
         <Form/>
-        <AddToMetaMask/>
+        <AddToMetaMask contractAddress={props.contract_address}/>
       </main>
 
       <footer>
@@ -259,4 +264,12 @@ export default function Home() {
       `}</style>
     </div>
   )
+}
+
+export async function getStaticProps(context) {
+  return {
+    props: {
+      contract_address: process.env.FAUCET_CONTRACT_ADDRESS  || "0x041D49e52EaEeF72B2c554a92ED665a268056b1d"
+    }, // will be passed to the page component as props
+  }
 }
