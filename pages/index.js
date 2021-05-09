@@ -42,10 +42,11 @@ function AddToMetaMask() {
   const tokenAddress = '0xB44cf912E9D0341e92f64f4a0642393B7f3526C4';
   const tokenSymbol = 'PULL';
   const tokenDecimals = 18;
-  if(window !== undefined) {
-    const tokenImage = window.location.protocol + "//" + window.location.host+'/images/rugpull.png';
+  let tokenImage = '';
+  if (typeof window !== 'undefined') {
+    tokenImage = window.location.protocol + "//" + window.location.host+'/images/rugpull.png';
   } else {
-    const tokenImage = '';
+    tokenImage = '/images/rugpull.png';
   }
   //console.log(tokenImage);
   const tryAdd = async () => {
