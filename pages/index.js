@@ -42,8 +42,8 @@ function AddToMetaMask() {
   const tokenAddress = '0xB44cf912E9D0341e92f64f4a0642393B7f3526C4';
   const tokenSymbol = 'PULL';
   const tokenDecimals = 18;
-  const tokenImage = '/images/rugpull.png';
-
+  const tokenImage = window.location.protocol + "//" + window.location.host+'/images/rugpull.png';
+  //console.log(tokenImage);
   const tryAdd = async () => {
     try {
       // wasAdded is a boolean. Like any RPC method, an error may be thrown.
@@ -71,7 +71,7 @@ function AddToMetaMask() {
   }
 
   return (
-    <a href="#" onClick={tryAdd}>Add to MetaMask</a>
+    <small><a href="#" onClick={tryAdd}>Add to MetaMask</a></small>
   )
 }
 
