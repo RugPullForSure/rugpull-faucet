@@ -76,7 +76,7 @@ function AddToMetaMask() {
   }
 
   return (
-    <small><a href="#" onClick={tryAdd}>Add to MetaMask</a></small>
+    <a href="#" onClick={tryAdd}><small>Add to MetaMask</small></a>
   )
 }
 
