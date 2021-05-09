@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 
 const RUGPULL_ABI = require('../../lib/RugpullToken.json');
 const FAUCET_CONTRACT_ADDRESS = process.env.FAUCET_CONTRACT_ADDRESS;
-const BSC_NODE_URL = process.env.BSC_NODE_URL || 'https://bsc-dataseed.binance.org/';
+const BSC_NODE_URL = process.env.BSC_NODE_URL || 'https://data-seed-prebsc-1-s1.binance.org:8545/';
 
 const contractAbi = new ethers.utils.Interface(RUGPULL_ABI);
 
