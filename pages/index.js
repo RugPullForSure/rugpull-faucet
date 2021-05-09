@@ -25,7 +25,8 @@ function Form() {
     //console.log("True or False?", (result.result ? "True" : "False"));
     let tmpData = {
       result: result.result,
-      showError: true
+      showError: true,
+      address: event.target.rcpAddress.value
     };
     setData(tmpData);
     return result;
@@ -33,10 +34,11 @@ function Form() {
 
   return (
     <form onSubmit={registerUser}>
-      <label htmlFor="rcpAddress">BSC Address: </label>
-      <input id="rcpAddress" name="rcpAddress" type="text" autoComplete="rcpAddress" size="42" pattern="^0x[a-fA-F0-9]{40}$" required />
-      <button type="submit">Send</button><br/>
-      {data.showError && <center><label id="resultStatus" ><b>{data.result ? "Success, sent tokens!" : "Error"}</b></label></center> }
+      {!data.showError && <label htmlFor="rcpAddress">BSC Address: </label> }
+      {!data.showError && <input id="rcpAddress" name="rcpAddress" type="text" autoComplete="rcpAddress" size="42" pattern="^0x[a-fA-F0-9]{40}$" required /> }
+      {!data.showError && <button type="submit">Send</button>}
+      {!data.showError && <br/>}
+      {data.showError && <center><label id="resultStatus" ><b>{data.result ? "Success! Sent tokens to "+data.address : "Error"}</b></label></center> }
     </form>
   )
 }
@@ -101,7 +103,7 @@ export default function Home(props) {
         <p className="description">
           Get started by entering a BSC address
         </p>
-        <small>2 hour delay per address</small>
+        <small>One use per day, per address</small>
         <Form/>
         <AddToMetaMask contractAddress={props.contract_address}/>
       </main>
