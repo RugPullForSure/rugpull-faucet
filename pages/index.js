@@ -22,7 +22,7 @@ function Form() {
     )
 
     const result = await res.json()
-    console.log("True or False?", (result.result ? "True" : "False"));
+    //console.log("True or False?", (result.result ? "True" : "False"));
     let tmpData = {
       result: result.result,
       showError: true
@@ -36,7 +36,7 @@ function Form() {
       <label htmlFor="rcpAddress">BSC Address: </label>
       <input id="rcpAddress" name="rcpAddress" type="text" autoComplete="rcpAddress" size="42" pattern="^0x[a-fA-F0-9]{40}$" required />
       <button type="submit">Send</button><br/>
-      {data.showError && <center><label id="resultStatus" ><b>{data.result ? "Success" : "Error"}</b></label></center> }
+      {data.showError && <center><label id="resultStatus" ><b>{data.result ? "Success, sent tokens!" : "Error"}</b></label></center> }
     </form>
   )
 }
