@@ -1,8 +1,10 @@
 import Head from 'next/head'
 import HeroImage from '../components/HeroImage'
 import Link from 'next/link'
+import { useEffect, useState } from 'react';
 
 function Form() {
+  const [data, setData] = useState({'status':''});
   const registerUser = async event => {
     event.preventDefault()
 
@@ -20,20 +22,60 @@ function Form() {
     )
 
     const result = await res.json()
+    console.log(result.text);
+    //setData({'status':result});
     return result;
   }
 
   return (
     <form onSubmit={registerUser}>
       <label htmlFor="rcpAddress">BSC Address: </label>
-      <input id="rcpAddress" name="rcpAddress" type="text" autoComplete="rcpAddress" size="42" required />
+      <input id="rcpAddress" name="rcpAddress" type="text" autoComplete="rcpAddress" size="42" pattern="^0x[a-fA-F0-9]{40}$" required />
       <button type="submit">Send</button>
+      <label id="resultStatus">{data.status}</label>
     </form>
   )
 }
 
-export default function Home() {
 
+function AddToMetaMask() {
+  const tokenAddress = '0xB44cf912E9D0341e92f64f4a0642393B7f3526C4';
+  const tokenSymbol = 'PULL';
+  const tokenDecimals = 18;
+  const tokenImage = '/images/rugpull.png';
+
+  const tryAdd = async () => {
+    try {
+      // wasAdded is a boolean. Like any RPC method, an error may be thrown.
+      const wasAdded = await ethereum.request({
+        method: 'wallet_watchAsset',
+        params: {
+          type: 'ERC20', // Initially only supports ERC20, but eventually more!
+          options: {
+            address: tokenAddress, // The address that the token is at.
+            symbol: tokenSymbol, // A ticker symbol or shorthand, up to 5 chars.
+            decimals: tokenDecimals, // The number of decimals in the token
+            image: tokenImage, // A string url of the token logo
+          },
+        },
+      });
+
+      if (wasAdded) {
+        console.log('Thanks for your interest!');
+      } else {
+        console.log('Your loss!');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  return (
+    <a href="#" onClick={tryAdd}>Add to MetaMask</a>
+  )
+}
+
+export default function Home() {
   return (
     <div className="container">
       <Head>
@@ -51,6 +93,7 @@ export default function Home() {
           Get started by entering a BSC address
         </p>
         <Form/>
+        <AddToMetaMask/>
       </main>
 
       <footer>
