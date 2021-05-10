@@ -2,11 +2,22 @@ import Head from 'next/head'
 import HeroImage from '../components/HeroImage'
 import Link from 'next/link'
 import { useEffect, useState } from 'react';
+import Image from 'next/image'
+import Router from 'next/router';
 
 function Form() {
-  const [data, setData] = useState({'result':false,'showError':false});
+  const [data, setData] = useState({'result':false,'showError':false,'hideInput':false,'loadingTxn':false});
   const registerUser = async event => {
     event.preventDefault()
+
+    let initialData = data;
+    initialData = {
+      showError: false,
+      address: event.target.rcpAddress.value,
+      hideInput: true,
+      loadingTxn: true
+    };
+    setData(initialData);
 
     const res = await fetch(
       '/api/sendFunds',
@@ -22,23 +33,26 @@ function Form() {
     )
 
     const result = await res.json()
-    //console.log("True or False?", (result.result ? "True" : "False"));
-    let tmpData = {
-      result: result.result,
-      showError: true,
-      address: event.target.rcpAddress.value
-    };
-    setData(tmpData);
-    return result;
+    //console.log("Data:",data);
+    data["showError"] = true;
+    data["hideInput"] = true;
+    data["loadingTxn"] = false;
+    data["address"] = initialData.address;
+    data["result"] = result.result;
+    setData(data);
+    event.target.reset();
+    //console.log("Form reset.");
+    return true;
   }
 
   return (
     <form onSubmit={registerUser}>
-      {!data.showError && <label htmlFor="rcpAddress">BSC Address: </label> }
-      {!data.showError && <input id="rcpAddress" name="rcpAddress" type="text" autoComplete="rcpAddress" size="42" pattern="^0x[a-fA-F0-9]{40}$" required /> }
-      {!data.showError && <button type="submit">Send</button>}
-      {!data.showError && <br/>}
-      {data.showError && <center><label id="resultStatus" ><b>{data.result ? "Success! Sent tokens to "+data.address : "Error"}</b></label></center> }
+      {!data.hideInput && <label htmlFor="rcpAddress">BSC Address: </label> }
+      {!data.hideInput && <input id="rcpAddress" name="rcpAddress" type="text" autoComplete="rcpAddress" size="42" pattern="^0x[a-fA-F0-9]{40}$" required /> }
+      {!data.hideInput && <button type="submit">Send</button>}
+      {!data.hideInput && <br/>}
+      {data.loadingTxn && !data.showError && <Image src="/images/Eclipse-1s-200px.svg" height={47} width={47} alt="Loading" /> }
+      {data.showError && <center><label id="resultStatus" ><b>{data.result == false ? "Success! Sent tokens to "+data.address : "Error: "+data.result}</b></label></center> }
     </form>
   )
 }

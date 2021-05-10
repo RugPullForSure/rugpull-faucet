@@ -14,7 +14,7 @@ const BSC_WALLET_PRIVATE_KEY = process.env.BSC_WALLET_PRIVATE_KEY;
 const wallet = new ethers.Wallet(BSC_WALLET_PRIVATE_KEY, provider);
 
 //const TIME_TO_WAIT = (60*60*24)*1000;
-const TIME_TO_WAIT = (120*60)*1000; //two hour wait
+const TIME_TO_WAIT = (60*60*12)*1000; //two hour wait
 let addressList = [{}];
 
 export default async function handler(req, res) {
@@ -24,25 +24,14 @@ export default async function handler(req, res) {
     console.log(await wallet.provider.getNetwork());
 
     let sentResult;
-    /*
-    if(provider.getBalance('0xC61fF36ce9aC0EBCc1ca63ECE752a1fc2c89e2c6','PULL') < 1000) {
-        res.status(200).json({ text: "out of funds" });
+
+    const validationResponse = validateAddress(req.body.address);
+    if(!validationResponse) {
+        sentResult = await sendFunds(req.body.address);
+    } else {
+        sentResult = validationResponse;
     }
-    */
-    if(validateAddress(req.body.address)) {
-        sentResult = sendFunds(req.body.address);
-    }
-    /*
-    console.log("Testing timing...");
-    const time1 = Date.now();
-    console.log("Time 1:",time1);
-    for(let i=10;i>0;i--){
-        console.log(i);
-    }
-    const time2 = Date.now();
-    console.log("Time 2:",time2);
-    console.log("Time taken:",time2-time1);
-    */
+    console.log("sentResult:",sentResult);
     res.status(200).json({ result: sentResult });
   }
 
@@ -51,16 +40,25 @@ function validateAddress(address) {
     if(addressLookup) {
         console.log("Found previous entry for",address);
         let remainingTime = (TIME_TO_WAIT-(Date.now()-addressLookup.timestamp));
+        const thenDate = new Date(addressLookup.timestamp);
+        const nowDate = new Date(Date.now());
+        console.log("thenDate:",thenDate);
+        console.log("nowDate:",nowDate);
+        console.log("thenDate.getDate():", thenDate.getDate());
+        console.log("nowDate.getDate():",nowDate.getDate());
+        if(nowDate.getDate() > thenDate.getDate() || nowDate.getMonth() != thenDate.getMonth()) {
+            remainingTime = 0;
+        }
         console.log("Remaining time (seconds): ",parseInt(remainingTime/1000));
         if(remainingTime > 0) {
-            return false;
+            return "Try again tomorrow, please!";
         } else {
             console.log("Found OLD entry for",address);
             removeByAttr(addressList,"address",address);
-            return true
+            return false;
         }
     } else {
-    return true;
+    return false;
     }
 }
 
@@ -88,10 +86,10 @@ async function sendFunds(address) {
         };
         addressList.push(addressEntry);
         console.log("Success!");
-        return true;
+        return false;
     } else {
         console.error("Failed to send transaction, no event emitted");
-        return false;
+        return "Failed to send transaction, no event emitted";
     }
 }
 
