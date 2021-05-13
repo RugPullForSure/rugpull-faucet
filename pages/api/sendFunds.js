@@ -73,7 +73,7 @@ async function sendFunds(address) {
     console.log("Spender address:",spenderAddress);
     let allowFunds = await faucetContract.allowance(ownerAddress,spenderAddress);
     console.log("Allowance:",ethers.utils.formatEther(allowFunds));
-    await faucetContract.transferFrom(spenderAddress,address,ethers.utils.parseEther('1000'),{gasLimit:250000});
+    await faucetContract.transferFrom(spenderAddress,address,ethers.utils.parseEther('10000'),{gasLimit:250000});
     console.log("From address:",await wallet.getAddress(1));
     let balancePULL = await faucetContract.balanceOf(spenderAddress);
     console.log("PULL balance:",ethers.utils.formatEther(balancePULL));
