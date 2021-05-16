@@ -121,7 +121,10 @@ export default function Home(props) {
         <Form/>
         <AddToMetaMask contractAddress={props.contract_address}/>
       </main>
-
+      <small>
+      <p>Donate BAN: <a href="https://creeper.bananode.eu/explorer/account/ban_1fundmhojrgz3fw4grh35kgh4671ho59fzauskqr76qi9bn3ae6pwwgadugt/history">ban_1fundmhojrgz3fw4grh35kgh4671ho59fzauskqr76qi9bn3ae6pwwgadugt</a></p>
+      <p>Donate NANO: <a href="https://nanolooker.com/account/nano_1rugmijei7wjgyjujtuobwougf9m8jhwswxaxw6cromr6jeitxsjrs5bo4uu">nano_1rugmijei7wjgyjujtuobwougf9m8jhwswxaxw6cromr6jeitxsjrs5bo4uu</a></p>
+      </small>
       <footer>
         <a
           href="https://chat.banano.cc"
