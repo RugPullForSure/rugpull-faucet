@@ -104,14 +104,14 @@ export default function Home(props) {
   return (
     <div className="container">
       <Head>
-        <title>Rug Pull Faucet, For Sure</title>
+        <title>Rug and Tug</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
       <HeroImage/>
         <h1 className="title">
-          <Link href="https://bscscan.com/token/0xB44cf912E9D0341e92f64f4a0642393B7f3526C4"><a>Rug Pull</a></Link> Faucet, For Sure
+          <Link href="https://bscscan.com/token/0xB44cf912E9D0341e92f64f4a0642393B7f3526C4"><a>Rug</a></Link> and Tug!
         </h1>
 
         <p className="description">
