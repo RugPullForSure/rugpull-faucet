@@ -13,8 +13,8 @@ const BSC_WALLET_PRIVATE_KEY = process.env.BSC_WALLET_PRIVATE_KEY;
 
 const wallet = new ethers.Wallet(BSC_WALLET_PRIVATE_KEY, provider);
 
-//const TIME_TO_WAIT = (60*60*24)*1000;
-const TIME_TO_WAIT = (60*60*12)*1000; //two hour wait
+const TIME_TO_WAIT = (60*60*24)*1000;
+//const TIME_TO_WAIT = (60*60*12)*1000; //two hour wait
 let addressList = [{}];
 
 export default async function handler(req, res) {
