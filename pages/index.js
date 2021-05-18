@@ -4,6 +4,11 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react';
 import Image from 'next/image'
 import Router from 'next/router';
+import publicIp from "public-ip";
+
+export const getClientIp = async () => await publicIp.v4({
+  fallbackUrls: [ "https://ifconfig.co/ip" ]
+});
 
 function Form() {
   const [data, setData] = useState({'result':false,'showError':false,'hideInput':false,'loadingTxn':false});
@@ -24,7 +29,7 @@ function Form() {
       {
         body: JSON.stringify({
           address: event.target.rcpAddress.value,
-          ip_address:''
+          ip_address: getClientIp
         }),
         headers: {
           'Content-Type': 'application/json'
