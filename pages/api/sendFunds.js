@@ -25,7 +25,7 @@ export default async function handler(req, res) {
 
     let sentResult;
 
-    const validationResponse = validateAddress(req.body.address);
+    const validationResponse = await validateAddress(req.body.address,req.body.ip_address);
     if(!validationResponse) {
         sentResult = await sendFunds(req.body.address);
     } else {
@@ -35,7 +35,8 @@ export default async function handler(req, res) {
     res.status(200).json({ result: sentResult });
   }
 
-function validateAddress(address) {
+async function validateAddress(address,ip_address) {
+    /*
     let addressLookup = addressList.find(entry => entry.address === address);
     if(addressLookup) {
         console.log("Found previous entry for",address);
@@ -60,6 +61,21 @@ function validateAddress(address) {
     } else {
     return false;
     }
+    */
+    const listLookupIPAddress = await fetch(
+        'https://faucet.rugpull.best/api/get-entry',
+        {
+          body: JSON.stringify({
+            ip_address: ip_address,
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          method: 'POST'
+        }
+      )
+    console.log("Did we find the IP address in the list?",listLookupIPAddress);
+    return true;
 }
 
 async function sendFunds(address) {
@@ -80,11 +96,28 @@ async function sendFunds(address) {
     const faucetEvents = faucetContract.filters.Transfer(null,address);
     if(faucetEvents) { 
         console.log(faucetEvents);
+        /*
         let addressEntry = {
             "address": address,
             "timestamp":Date.now()
         };
         addressList.push(addressEntry);
+        */
+        const addToListResponse = await fetch(
+            'https://faucet.rugpull.best/api/create-entry',
+            {
+              body: JSON.stringify({
+                ip_address: '',
+                bsc_address: address,
+                timestamp: Date.now()
+              }),
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              method: 'POST'
+            }
+          )
+        console.log("API call to add to the cooldown list:",addToListResponse);
         console.log("Success!");
         return false;
     } else {

@@ -1,24 +1,20 @@
 import { NextApiHandler } from 'next'
-import Filter from 'bad-words'
 import { query } from '../../lib/db'
 
-const filter = new Filter()
-
 const handler: NextApiHandler = async (req, res) => {
-  const { title, content } = req.body
+  const { ip_address, bsc_address, timestamp } = req.body
   try {
-    if (!title || !content) {
+    if (!ip_address || !bsc_address || !timestamp) {
       return res
         .status(400)
-        .json({ message: '`title` and `content` are both required' })
+        .json({ message: '`ip_address` `bsc_address` and `timestamp` are all required' })
     }
 
     const results = await query(
       `
-      INSERT INTO entries (title, content)
+      INSERT INTO rugpull_faucet_users (ip_address, bsc_address, timestamp)
       VALUES (?, ?)
-      `,
-      [filter.clean(title), filter.clean(content)]
+      `
     )
 
     return res.json(results)

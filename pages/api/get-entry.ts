@@ -2,21 +2,21 @@ import { NextApiHandler } from 'next'
 import { query } from '../../lib/db'
 
 const handler: NextApiHandler = async (req, res) => {
-  const { id } = req.query
+  const { ip_address } = req.query
   try {
-    if (!id) {
-      return res.status(400).json({ message: '`id` required' })
+    if (!ip_address) {
+      return res.status(400).json({ message: '`ip_address` required' })
     }
-    if (typeof parseInt(id.toString()) !== 'number') {
-      return res.status(400).json({ message: '`id` must be a number' })
+    if (typeof parseInt(ip_address.toString()) !== 'number') {
+      return res.status(400).json({ message: '`ip_address` must be a number' })
     }
     const results = await query(
       `
-      SELECT id, title, content
-      FROM entries
-      WHERE id = ?
+      SELECT client_ip_address, client_bsc_address, timestamp
+      FROM rugpull_faucet_users
+      WHERE client_ip_address = ?
     `,
-      id
+      ip_address
     )
 
     return res.json(results[0])

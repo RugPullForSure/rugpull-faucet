@@ -23,7 +23,8 @@ function Form() {
       '/api/sendFunds',
       {
         body: JSON.stringify({
-          address: event.target.rcpAddress.value
+          address: event.target.rcpAddress.value,
+          ip_address:''
         }),
         headers: {
           'Content-Type': 'application/json'
