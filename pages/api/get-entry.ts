@@ -20,7 +20,7 @@ const handler: NextApiHandler = async (req, res) => {
 export async function getEntry(ip_address) {
   console.log("IP Address being fed to getEntry:",ip_address);
   const results = await query(
-  `SELECT INET_NTOA(client_ip_address), client_bsc_address, timestamp
+  `SELECT INET_NTOA(client_ip_address) AS ip_address, client_bsc_address
     FROM rugpull_faucet_users
     WHERE INET_NTOA(client_ip_address) = ?`,
     ip_address

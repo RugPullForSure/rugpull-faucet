@@ -21,7 +21,7 @@ export async function addUser(ip_address,bsc_address){
   const results = await query(
     `
     INSERT INTO rugpull_faucet_users (client_ip_address, client_bsc_address, timestamp)
-    VALUES (INET_ATON(?), ?, NOW())
+    VALUES (INET_ATON(?), ?, UNIX_TIMESTAMP())
     `,[ip_address,bsc_address]
   )
 
