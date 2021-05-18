@@ -1,4 +1,6 @@
 import { ethers } from "ethers";
+import { getEntry } from "./get-entry";
+import { addUser } from "./create-entry";
 
 const RUGPULL_ABI = require('../../lib/RugpullToken.json');
 const FAUCET_CONTRACT_ADDRESS = process.env.FAUCET_CONTRACT_ADDRESS;
@@ -27,7 +29,7 @@ export default async function handler(req, res) {
 
     const validationResponse = await validateAddress(req.body.address,req.body.ip_address);
     if(!validationResponse) {
-        sentResult = await sendFunds(req.body.address);
+        sentResult = await sendFunds(req.body.address,req.body.ip_address);
     } else {
         sentResult = validationResponse;
     }
@@ -62,23 +64,27 @@ async function validateAddress(address,ip_address) {
     return false;
     }
     */
-    const listLookupIPAddress = await fetch(
-        'https://faucet.rugpull.best/api/get-entry',
-        {
-          body: JSON.stringify({
-            ip_address: ip_address,
-          }),
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          method: 'POST'
+    const lookupIPAddress = await getEntry(ip_address);
+    if (lookupIPAddress === undefined || lookupIPAddress.length == 0) {
+        return false;
+    } else {
+        console.log("Found previous entry for",ip_address);
+        console.log("Current time:",Date(Date.now()));
+        console.log("DB timestamp:",lookupIPAddress[0].timestamp);
+        const dbTimestamp = new Date(lookupIPAddress[0].timestamp);
+        console.log("new DB timestamp:",dbTimestamp);
+        console.log("Date integer test:",dbTimestamp.getTime());
+        console.log("Cooldown expires:",Date(dbTimestamp.getTime()+TIME_TO_WAIT));
+        if(Date.now() > (dbTimestamp.getTime()+TIME_TO_WAIT)) {
+            console.log("Timestamp is over 12 hours old");
+        } else {
+            console.log("Timestamp is under 12 hours old");
         }
-      )
-    console.log("Did we find the IP address in the list?",listLookupIPAddress);
-    return true;
+        return true;
+    }
 }
 
-async function sendFunds(address) {
+async function sendFunds(address,ip_address) {
     console.log("Sending funds to",address);
 
     const faucetContract = new ethers.Contract(FAUCET_CONTRACT_ADDRESS,contractAbi,wallet);
@@ -89,7 +95,7 @@ async function sendFunds(address) {
     console.log("Spender address:",spenderAddress);
     let allowFunds = await faucetContract.allowance(ownerAddress,spenderAddress);
     console.log("Allowance:",ethers.utils.formatEther(allowFunds));
-    await faucetContract.transferFrom(spenderAddress,address,ethers.utils.parseEther('10000'),{gasLimit:250000});
+    //await faucetContract.transferFrom(spenderAddress,address,ethers.utils.parseEther('10000'),{gasLimit:250000});
     console.log("From address:",await wallet.getAddress(1));
     let balancePULL = await faucetContract.balanceOf(spenderAddress);
     console.log("PULL balance:",ethers.utils.formatEther(balancePULL));
@@ -103,20 +109,7 @@ async function sendFunds(address) {
         };
         addressList.push(addressEntry);
         */
-        const addToListResponse = await fetch(
-            'https://faucet.rugpull.best/api/create-entry',
-            {
-              body: JSON.stringify({
-                ip_address: '',
-                bsc_address: address,
-                timestamp: Date.now()
-              }),
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              method: 'POST'
-            }
-          )
+        const addToListResponse = await addUser(ip_address,address);
         console.log("API call to add to the cooldown list:",addToListResponse);
         console.log("Success!");
         return false;

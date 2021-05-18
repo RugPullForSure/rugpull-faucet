@@ -10,7 +10,7 @@ export const getClientIp = async () => await publicIp.v4({
   fallbackUrls: [ "https://ifconfig.co/ip" ]
 });
 
-function Form() {
+function Form(args) {
   const [data, setData] = useState({'result':false,'showError':false,'hideInput':false,'loadingTxn':false});
   const registerUser = async event => {
     event.preventDefault()
@@ -23,13 +23,13 @@ function Form() {
       loadingTxn: true
     };
     setData(initialData);
-
+    console.log("IP Address?",args.ip_address);
     const res = await fetch(
       '/api/sendFunds',
       {
         body: JSON.stringify({
           address: event.target.rcpAddress.value,
-          ip_address: getClientIp
+          ip_address: args.ip_address
         }),
         headers: {
           'Content-Type': 'application/json'
@@ -124,7 +124,7 @@ export default function Home(props) {
           Get started by entering a BSC address
         </p>
         <small>One use per day, per address</small>
-        <Form/>
+        <Form ip_address={props.ip_address}/>
         <AddToMetaMask contractAddress={props.contract_address}/>
       </main>
       <small>
@@ -292,9 +292,12 @@ export default function Home(props) {
 }
 
 export async function getStaticProps(context) {
+  const clientIP = await getClientIp();
+  console.log("Client IP in getStaticProps?",clientIP);
   return {
     props: {
-      contract_address: process.env.FAUCET_CONTRACT_ADDRESS  || "0x041D49e52EaEeF72B2c554a92ED665a268056b1d"
+      contract_address: process.env.FAUCET_CONTRACT_ADDRESS  || "0x041D49e52EaEeF72B2c554a92ED665a268056b1d",
+      ip_address: clientIP
     }, // will be passed to the page component as props
   }
 }
