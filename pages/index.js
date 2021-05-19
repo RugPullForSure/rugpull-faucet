@@ -23,7 +23,7 @@ function Form(args) {
       loadingTxn: true
     };
     setData(initialData);
-    console.log("IP Address?",args.ip_address);
+    
     const res = await fetch(
       '/api/sendFunds',
       {
@@ -39,7 +39,7 @@ function Form(args) {
     )
 
     const result = await res.json()
-    //console.log("Data:",data);
+    
     data["showError"] = true;
     data["hideInput"] = true;
     data["loadingTxn"] = false;
@@ -47,7 +47,7 @@ function Form(args) {
     data["result"] = result.result;
     setData(data);
     event.target.reset();
-    //console.log("Form reset.");
+    
     return true;
   }
 
@@ -108,7 +108,7 @@ function AddToMetaMask(args) {
 
 export default function Home(props) {
   const [data, setData] = useState(props);
-  console.log("Data:",data);
+  
   useEffect(() => {
     if(data.updated === false) {
       const grabIPv4 = async () => {
@@ -118,14 +118,14 @@ export default function Home(props) {
           ip_address: clientIP,
           updated: true
         };
-        console.log("tmpData:",tmpData);
-        console.log("Client IP address in Home component:",tmpData.ip_address);
+        
+        //console.log("Client IP address in Home component:",tmpData.ip_address);
         setData(tmpData);
       }
       grabIPv4();
     }
   });
-  //console.log("Data again:",data)
+  
   return (
     <div className="container">
       <Head>
