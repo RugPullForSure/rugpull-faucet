@@ -64,6 +64,7 @@ async function sendFunds(address,ip_address) {
     const faucetEvents = faucetContract.filters.Transfer(null,address);
     if(faucetEvents) { 
         console.log(faucetEvents);
+        console.log("Adding to list...",[ip_address,address]);
         const addToListResponse = await addUser(ip_address,address);
         console.log("API call to add to the cooldown list:",addToListResponse);
         console.log("Success!");
