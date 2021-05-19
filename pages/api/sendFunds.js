@@ -1,4 +1,6 @@
 import { ethers } from "ethers";
+import { getEntry } from "./get-entry";
+import { addUser } from "./create-entry";
 
 const RUGPULL_ABI = require('../../lib/RugpullToken.json');
 const FAUCET_CONTRACT_ADDRESS = process.env.FAUCET_CONTRACT_ADDRESS;
@@ -15,7 +17,6 @@ const wallet = new ethers.Wallet(BSC_WALLET_PRIVATE_KEY, provider);
 
 const TIME_TO_WAIT = (60*60*24)*1000;
 //const TIME_TO_WAIT = (60*60*12)*1000; //two hour wait
-let addressList = [{}];
 
 export default async function handler(req, res) {
     console.log(await provider.getBlockNumber());
@@ -25,9 +26,9 @@ export default async function handler(req, res) {
 
     let sentResult;
 
-    const validationResponse = validateAddress(req.body.address);
+    const validationResponse = await validateAddress(req.body.address,req.body.ip_address);
     if(!validationResponse) {
-        sentResult = await sendFunds(req.body.address);
+        sentResult = await sendFunds(req.body.address,req.body.ip_address);
     } else {
         sentResult = validationResponse;
     }
@@ -35,34 +36,17 @@ export default async function handler(req, res) {
     res.status(200).json({ result: sentResult });
   }
 
-function validateAddress(address) {
-    let addressLookup = addressList.find(entry => entry.address === address);
-    if(addressLookup) {
-        console.log("Found previous entry for",address);
-        let remainingTime = (TIME_TO_WAIT-(Date.now()-addressLookup.timestamp));
-        const thenDate = new Date(addressLookup.timestamp);
-        const nowDate = new Date(Date.now());
-        console.log("thenDate:",thenDate);
-        console.log("nowDate:",nowDate);
-        console.log("thenDate.getDate():", thenDate.getDate());
-        console.log("nowDate.getDate():",nowDate.getDate());
-        if(nowDate.getDate() > thenDate.getDate() || nowDate.getMonth() != thenDate.getMonth()) {
-            remainingTime = 0;
-        }
-        console.log("Remaining time (seconds): ",parseInt(remainingTime/1000));
-        if(remainingTime > 0) {
-            return "Try again tomorrow, please!";
-        } else {
-            console.log("Found OLD entry for",address);
-            removeByAttr(addressList,"address",address);
-            return false;
-        }
+async function validateAddress(address,ip_address) {
+    const lookupIPAddress = await getEntry(ip_address);
+    if (lookupIPAddress === undefined || lookupIPAddress.length == 0) {
+        return false;
     } else {
-    return false;
+        console.log("IP address still on cooldown: ",ip_address);
+        return "IP address on cooldown";
     }
 }
 
-async function sendFunds(address) {
+async function sendFunds(address,ip_address) {
     console.log("Sending funds to",address);
 
     const faucetContract = new ethers.Contract(FAUCET_CONTRACT_ADDRESS,contractAbi,wallet);
@@ -80,29 +64,12 @@ async function sendFunds(address) {
     const faucetEvents = faucetContract.filters.Transfer(null,address);
     if(faucetEvents) { 
         console.log(faucetEvents);
-        let addressEntry = {
-            "address": address,
-            "timestamp":Date.now()
-        };
-        addressList.push(addressEntry);
+        const addToListResponse = await addUser(ip_address,address);
+        console.log("API call to add to the cooldown list:",addToListResponse);
         console.log("Success!");
         return false;
     } else {
         console.error("Failed to send transaction, no event emitted");
         return "Failed to send transaction, no event emitted";
     }
-}
-
-var removeByAttr = function(arr, attr, value){
-    var i = arr.length;
-    while(i--){
-       if( arr[i] 
-           && arr[i].hasOwnProperty(attr) 
-           && (arguments.length > 2 && arr[i][attr] === value ) ){ 
-
-           arr.splice(i,1);
-
-       }
-    }
-    return arr;
 }

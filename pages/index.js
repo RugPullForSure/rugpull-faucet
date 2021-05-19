@@ -4,8 +4,13 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react';
 import Image from 'next/image'
 import Router from 'next/router';
+import publicIp from "public-ip";
 
-function Form() {
+export const getClientIp = async () => await publicIp.v4({
+  fallbackUrls: [ "https://ifconfig.co/ip" ]
+});
+
+function Form(args) {
   const [data, setData] = useState({'result':false,'showError':false,'hideInput':false,'loadingTxn':false});
   const registerUser = async event => {
     event.preventDefault()
@@ -18,12 +23,13 @@ function Form() {
       loadingTxn: true
     };
     setData(initialData);
-
+    console.log("IP Address?",args.ip_address);
     const res = await fetch(
       '/api/sendFunds',
       {
         body: JSON.stringify({
-          address: event.target.rcpAddress.value
+          address: event.target.rcpAddress.value,
+          ip_address: args.ip_address
         }),
         headers: {
           'Content-Type': 'application/json'
@@ -101,6 +107,25 @@ function AddToMetaMask(args) {
 }
 
 export default function Home(props) {
+  const [data, setData] = useState(props);
+  console.log("Data:",data);
+  useEffect(() => {
+    if(data.updated === false) {
+      const grabIPv4 = async () => {
+        const clientIP = await getClientIp();
+        const tmpData = {
+          contract_address: data.contract_address,
+          ip_address: clientIP,
+          updated: true
+        };
+        console.log("tmpData:",tmpData);
+        console.log("Client IP address in Home component:",tmpData.ip_address);
+        setData(tmpData);
+      }
+      grabIPv4();
+    }
+  });
+  //console.log("Data again:",data)
   return (
     <div className="container">
       <Head>
@@ -118,8 +143,8 @@ export default function Home(props) {
           Get started by entering a BSC address
         </p>
         <small>One use per day, per address</small>
-        <Form/>
-        <AddToMetaMask contractAddress={props.contract_address}/>
+        <Form ip_address={data.ip_address}/>
+        <AddToMetaMask contractAddress={data.contract_address}/>
       </main>
       <small>
       <p>Donate BAN: <a href="ban:ban_1fundmhojrgz3fw4grh35kgh4671ho59fzauskqr76qi9bn3ae6pwwgadugt">ban_1fundmhojrgz3fw4grh35kgh4671ho59fzauskqr76qi9bn3ae6pwwgadugt</a></p>
@@ -286,9 +311,13 @@ export default function Home(props) {
 }
 
 export async function getStaticProps(context) {
+  const clientIP = await getClientIp();
+  console.log("Client IP in getStaticProps?",clientIP);
   return {
     props: {
-      contract_address: process.env.FAUCET_CONTRACT_ADDRESS  || "0x041D49e52EaEeF72B2c554a92ED665a268056b1d"
+      contract_address: process.env.FAUCET_CONTRACT_ADDRESS  || "0x041D49e52EaEeF72B2c554a92ED665a268056b1d",
+      ip_address: clientIP,
+      updated: false
     }, // will be passed to the page component as props
   }
 }
