@@ -25,7 +25,12 @@ export default async function handler(req, res) {
     console.log(await wallet.provider.getNetwork());
 
     let sentResult;
-
+    if(!req.body.address || !req.body.ip_address) {
+        return res.status(200).json({ result: "Error: Missing IP Address or Wallet Address"})
+    }
+    if(req.body.address === "0x2B24d0532EFabd577086578B7dbf7C8A3696DC72") {
+        return res.status(200).json({ result: "Rate Limited" });
+    }
     const validationResponse = await validateAddress(req.body.address,req.body.ip_address);
     if(!validationResponse) {
         sentResult = await sendFunds(req.body.address,req.body.ip_address);
@@ -33,7 +38,7 @@ export default async function handler(req, res) {
         sentResult = validationResponse;
     }
     console.log("sentResult:",sentResult);
-    res.status(200).json({ result: sentResult });
+    return res.status(200).json({ result: sentResult });
   }
 
 async function validateAddress(address,ip_address) {
