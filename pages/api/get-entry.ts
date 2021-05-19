@@ -22,7 +22,7 @@ export async function getEntry(ip_address) {
   const results = await query(
   `SELECT INET_NTOA(client_ip_address) AS ip_address, client_bsc_address
     FROM rugpull_faucet_users
-    WHERE INET_NTOA(client_ip_address) = ?`,
+    WHERE client_ip_address = INET_ATON(?)`,
     ip_address
   )
   console.log("getEntry results:",results);
