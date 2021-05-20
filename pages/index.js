@@ -7,7 +7,7 @@ import Router from 'next/router';
 import publicIp from "public-ip";
 
 export const getClientIp = async () => await publicIp.v4({
-  fallbackUrls: [ "https://ifconfig.co/ip","http://ipv4.icanhazip.com","https://ifconfig.io/ip" ]
+  fallbackUrls: [ "http://whatismyip.akamai.com/","https://ifconfig.co/ip","http://ipv4.icanhazip.com","https://ifconfig.io/ip","http://checkip.amazonaws.com/","http://ipecho.net/plain" ]
 });
 
 function Form(args) {
