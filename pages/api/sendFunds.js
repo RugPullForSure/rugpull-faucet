@@ -66,7 +66,7 @@ async function sendFunds(address,ip_address) {
     console.log("From address:",await wallet.getAddress(1));
     let balancePULL = await faucetContract.balanceOf(spenderAddress);
     console.log("PULL balance:",ethers.utils.formatEther(balancePULL));
-    const faucetEvents = faucetContract.filters.Transfer(null,address);
+    const faucetEvents = faucetContract.filters.Transfer(spenderAddress,address);
     if(faucetEvents) { 
         console.log(faucetEvents);
         console.log("Adding to list...",[ip_address,address]);
