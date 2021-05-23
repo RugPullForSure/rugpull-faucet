@@ -5,6 +5,10 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image'
 import Router from 'next/router';
 import publicIp from "public-ip";
+import { useWeb3React } from "@web3-react/core";
+import Account from "../components/Account";
+import ETHBalance from "../components/ETHBalance";
+import useEagerConnect from "../hooks/useEagerConnect";
 
 export const getClientIp = async () => await publicIp.v4({
   fallbackUrls: [ "http://whatismyip.akamai.com/","https://ifconfig.co/ip","http://ipv4.icanhazip.com","https://ifconfig.io/ip","http://checkip.amazonaws.com/","http://ipecho.net/plain" ]
@@ -109,6 +113,12 @@ function AddToMetaMask(args) {
 export default function Home(props) {
   const [data, setData] = useState(props);
   
+  const { account, library } = useWeb3React();
+
+  const triedToEagerConnect = useEagerConnect();
+
+  const isConnected = typeof account === "string" && !!library;
+
   useEffect(() => {
     if(data.updated === false) {
       const grabIPv4 = async () => {
@@ -138,7 +148,8 @@ export default function Home(props) {
         <h1 className="title">
           <Link href="https://bscscan.com/token/0xB44cf912E9D0341e92f64f4a0642393B7f3526C4"><a>Rug</a></Link> and Tug!
         </h1>
-
+        <Account triedToEagerConnect={triedToEagerConnect} />
+        <ETHBalance />
         <p className="description">
           Get started by entering a BSC address
         </p>
