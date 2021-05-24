@@ -1,14 +1,18 @@
 import Head from 'next/head'
 import HeroImage from '../components/HeroImage'
 import Link from 'next/link'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import Image from 'next/image'
 import Router from 'next/router';
 import publicIp from "public-ip";
 import { useWeb3React } from "@web3-react/core";
+import Card from "../components/Card";
 import Account from "../components/Account";
 import ETHBalance from "../components/ETHBalance";
+import FaucetDrip from "../components/FaucetDrip";
 import useEagerConnect from "../hooks/useEagerConnect";
+import AppBody from './AppBody';
+import { ThemeContext } from 'styled-components'
 
 export const getClientIp = async () => await publicIp.v4({
   fallbackUrls: [ "http://whatismyip.akamai.com/","https://ifconfig.co/ip","http://ipv4.icanhazip.com","https://ifconfig.io/ip","http://checkip.amazonaws.com/","http://ipecho.net/plain" ]
@@ -116,7 +120,7 @@ export default function Home(props) {
   const { account, library } = useWeb3React();
 
   const triedToEagerConnect = useEagerConnect();
-
+  const theme = useContext(ThemeContext);
   const isConnected = typeof account === "string" && !!library;
 
   useEffect(() => {
@@ -137,6 +141,7 @@ export default function Home(props) {
   });
   
   return (
+    <AppBody>
     <div className="container">
       <Head>
         <title>Rug and Tug</title>
@@ -150,12 +155,14 @@ export default function Home(props) {
         </h1>
         <Account triedToEagerConnect={triedToEagerConnect} />
         <ETHBalance />
+        <Card padding=".25rem .75rem 0 .75rem" borderRadius="20px">
         <p className="description">
-          Get started by entering a BSC address
+          Want free PULL? Get started by entering a BSC wallet address below.
         </p>
         <small>One use per day, per address</small>
         <Form ip_address={data.ip_address}/>
         <AddToMetaMask contractAddress={data.contract_address}/>
+        </Card>
       </main>
       <small>
       <p>Donate BAN: <a href="ban:ban_1fundmhojrgz3fw4grh35kgh4671ho59fzauskqr76qi9bn3ae6pwwgadugt">ban_1fundmhojrgz3fw4grh35kgh4671ho59fzauskqr76qi9bn3ae6pwwgadugt</a></p>
@@ -318,6 +325,7 @@ export default function Home(props) {
         }
       `}</style>
     </div>
+    </AppBody>
   )
 }
 
