@@ -141,7 +141,6 @@ export default function Home(props) {
   });
   
   return (
-    <AppBody>
     <div className="container">
       <Head>
         <title>Rug and Tug</title>
@@ -155,14 +154,13 @@ export default function Home(props) {
         </h1>
         <Account triedToEagerConnect={triedToEagerConnect} />
         <ETHBalance />
-        <Card padding=".25rem .75rem 0 .75rem" borderRadius="20px">
+        <FaucetDrip />
         <p className="description">
           Want free PULL? Get started by entering a BSC wallet address below.
         </p>
         <small>One use per day, per address</small>
         <Form ip_address={data.ip_address}/>
         <AddToMetaMask contractAddress={data.contract_address}/>
-        </Card>
       </main>
       <small>
       <p>Donate BAN: <a href="ban:ban_1fundmhojrgz3fw4grh35kgh4671ho59fzauskqr76qi9bn3ae6pwwgadugt">ban_1fundmhojrgz3fw4grh35kgh4671ho59fzauskqr76qi9bn3ae6pwwgadugt</a></p>
@@ -268,36 +266,6 @@ export default function Home(props) {
           margin-top: 3rem;
         }
 
-        .card {
-          margin: 1rem;
-          flex-basis: 45%;
-          padding: 1.5rem;
-          text-align: left;
-          color: inherit;
-          text-decoration: none;
-          border: 1px solid #eaeaea;
-          border-radius: 10px;
-          transition: color 0.15s ease, border-color 0.15s ease;
-        }
-
-        .card:hover,
-        .card:focus,
-        .card:active {
-          color: #0070f3;
-          border-color: #0070f3;
-        }
-
-        .card h3 {
-          margin: 0 0 1rem 0;
-          font-size: 1.5rem;
-        }
-
-        .card p {
-          margin: 0;
-          font-size: 1.25rem;
-          line-height: 1.5;
-        }
-
         .logo {
           height: 1em;
         }
@@ -325,7 +293,6 @@ export default function Home(props) {
         }
       `}</style>
     </div>
-    </AppBody>
   )
 }
 
