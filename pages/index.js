@@ -11,7 +11,6 @@ import Account from "../components/Account";
 import ETHBalance from "../components/ETHBalance";
 import FaucetDrip from "../components/FaucetDrip";
 import useEagerConnect from "../hooks/useEagerConnect";
-import AppBody from './AppBody';
 import { ThemeContext } from 'styled-components'
 
 export const getClientIp = async () => await publicIp.v4({
