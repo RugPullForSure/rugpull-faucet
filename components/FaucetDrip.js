@@ -1,6 +1,8 @@
 import { useWeb3React } from "@web3-react/core";
 import useContract from "../hooks/useContract";
 import FAUCET_ABI from "../lib/FaucetDrip.json";
+import { ThemeProvider } from 'styled-components'
+import { light, dark, Button } from '@pancakeswap-libs/uikit'
 
 const FaucetDrip = () => {
   const { account } = useWeb3React();
@@ -14,10 +16,10 @@ const FaucetDrip = () => {
   console.log(contract);
   */
   if(typeof contract != "undefined") {
-    return (      
-      <button onClick={() => { contract.faucetDrip(); }}> 
+    return (  
+      <Button onClick={() => { contract.faucetDrip(); }} variant="primary"> 
       Click here to use faucet smart contract
-      </button>
+      </Button>
     );
   } else {
     return (
