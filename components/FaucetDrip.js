@@ -14,13 +14,10 @@ const FaucetDrip = () => {
   console.log(contract);
   */
   if(typeof contract != "undefined") {
-    return (
-      <div>
-      <p>Willing to cover the BNB fee? <small>(100k PULL on success)</small></p>
+    return (      
       <button onClick={() => { contract.faucetDrip(); }}> 
       Click here to use faucet smart contract
       </button>
-      </div>
     );
   } else {
     return (

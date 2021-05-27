@@ -154,6 +154,9 @@ export default function Home(props) {
         </h1>
         <Account triedToEagerConnect={triedToEagerConnect} />
         <ETHBalance />
+        <p className="description">Willing to cover the BNB fee? 
+        <small>(100k PULL on success)</small>
+        </p>
         <FaucetDrip />
         <p className="description">
           Want free PULL? Get started by entering a BSC wallet address below.
