@@ -5,6 +5,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { injected } from "../connectors";
 import useENSName from "../hooks/useENSName";
 import { formatEtherscanLink, shortenHex } from "../util";
+import { Button } from '@pancakeswap-libs/uikit'
 
 const Account = ({ triedToEagerConnect }) => {
   const {
@@ -51,7 +52,7 @@ const Account = ({ triedToEagerConnect }) => {
     return (
       <div>
         {hasMetaMaskOrWeb3Available ? (
-          <button
+          <Button scale="sm" variant="secondary"
             onClick={() => {
               setConnecting(true);
 
@@ -68,11 +69,11 @@ const Account = ({ triedToEagerConnect }) => {
             {MetaMaskOnboarding.isMetaMaskInstalled()
               ? "Connect to MetaMask"
               : "Connect to Wallet"}
-          </button>
+          </Button>
         ) : (
-          <button onClick={() => onboarding.current?.startOnboarding()}>
+          <Button scale="sm" variant="secondary" onClick={() => onboarding.current?.startOnboarding()}>
             Install Metamask
-          </button>
+          </Button>
         )}
       </div>
     );
