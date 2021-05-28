@@ -1,10 +1,17 @@
 import Head from 'next/head'
 import HeroImage from '../components/HeroImage'
 import Link from 'next/link'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import Image from 'next/image'
 import Router from 'next/router';
 import publicIp from "public-ip";
+import { useWeb3React } from "@web3-react/core";
+import Card from "../components/Card";
+import Account from "../components/Account";
+import ETHBalance from "../components/ETHBalance";
+import FaucetDrip from "../components/FaucetDrip";
+import useEagerConnect from "../hooks/useEagerConnect";
+import { ThemeContext } from 'styled-components'
 
 export const getClientIp = async () => await publicIp.v4({
   fallbackUrls: [ "http://whatismyip.akamai.com/","https://ifconfig.co/ip","http://ipv4.icanhazip.com","https://ifconfig.io/ip","http://checkip.amazonaws.com/","http://ipecho.net/plain" ]
@@ -109,6 +116,12 @@ function AddToMetaMask(args) {
 export default function Home(props) {
   const [data, setData] = useState(props);
   
+  const { account, library } = useWeb3React();
+
+  const triedToEagerConnect = useEagerConnect();
+  const theme = useContext(ThemeContext);
+  const isConnected = typeof account === "string" && !!library;
+
   useEffect(() => {
     if(data.updated === false) {
       const grabIPv4 = async () => {
@@ -138,9 +151,14 @@ export default function Home(props) {
         <h1 className="title">
           <Link href="https://bscscan.com/token/0xB44cf912E9D0341e92f64f4a0642393B7f3526C4"><a>Rug</a></Link> and Tug!
         </h1>
-
+        <Account triedToEagerConnect={triedToEagerConnect} />
+        <ETHBalance />
+        <p className="description">Willing to cover the BNB fee? 
+        <small>(100k PULL on success)</small>
+        </p>
+        <FaucetDrip />
         <p className="description">
-          Get started by entering a BSC address
+          Want free PULL? Get started by entering a BSC wallet address below.
         </p>
         <small>One use per day, per address</small>
         <Form ip_address={data.ip_address}/>
@@ -248,36 +266,6 @@ export default function Home(props) {
 
           max-width: 800px;
           margin-top: 3rem;
-        }
-
-        .card {
-          margin: 1rem;
-          flex-basis: 45%;
-          padding: 1.5rem;
-          text-align: left;
-          color: inherit;
-          text-decoration: none;
-          border: 1px solid #eaeaea;
-          border-radius: 10px;
-          transition: color 0.15s ease, border-color 0.15s ease;
-        }
-
-        .card:hover,
-        .card:focus,
-        .card:active {
-          color: #0070f3;
-          border-color: #0070f3;
-        }
-
-        .card h3 {
-          margin: 0 0 1rem 0;
-          font-size: 1.5rem;
-        }
-
-        .card p {
-          margin: 0;
-          font-size: 1.25rem;
-          line-height: 1.5;
         }
 
         .logo {
