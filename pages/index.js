@@ -17,60 +17,6 @@ export const getClientIp = async () => await publicIp.v4({
   fallbackUrls: [ "http://whatismyip.akamai.com/","https://ifconfig.co/ip","http://ipv4.icanhazip.com","https://ifconfig.io/ip","http://checkip.amazonaws.com/","http://ipecho.net/plain" ]
 });
 
-function Form(args) {
-  const [data, setData] = useState({'result':false,'showError':false,'hideInput':false,'loadingTxn':false});
-  const registerUser = async event => {
-    event.preventDefault()
-
-    let initialData = data;
-    initialData = {
-      showError: false,
-      address: event.target.rcpAddress.value,
-      hideInput: true,
-      loadingTxn: true
-    };
-    setData(initialData);
-    
-    const res = await fetch(
-      '/api/sendFunds',
-      {
-        body: JSON.stringify({
-          address: event.target.rcpAddress.value,
-          ip_address: args.ip_address
-        }),
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        method: 'POST'
-      }
-    )
-
-    const result = await res.json()
-    
-    data["showError"] = true;
-    data["hideInput"] = true;
-    data["loadingTxn"] = false;
-    data["address"] = initialData.address;
-    data["result"] = result.result;
-    setData(data);
-    event.target.reset();
-    
-    return true;
-  }
-
-  return (
-    <form onSubmit={registerUser}>
-      {!data.hideInput && <label htmlFor="rcpAddress">BSC Address: </label> }
-      {!data.hideInput && <input id="rcpAddress" name="rcpAddress" type="text" autoComplete="rcpAddress" size="42" pattern="^0x[a-fA-F0-9]{40}$" required /> }
-      {!data.hideInput && <button type="submit">Send</button>}
-      {!data.hideInput && <br/>}
-      {data.loadingTxn && !data.showError && <Image src="/images/Eclipse-1s-200px.svg" height={47} width={47} alt="Loading" /> }
-      {data.showError && <center><label id="resultStatus" ><b>{data.result == false ? "Success! Sent tokens to "+data.address : "Error: "+data.result}</b></label></center> }
-    </form>
-  )
-}
-
-
 function AddToMetaMask(args) {
   const tokenAddress = args.contractAddress;
   const tokenSymbol = 'PULL';
