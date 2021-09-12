@@ -18,7 +18,15 @@ export const getClientIp = async () => await publicIp.v4({
 });
 
 function AddToMetaMask(args) {
-  const tokenAddress = args.contractAddress;
+
+  const {account, chainId} = useWeb3React();
+  const contractAddress = {
+    56: "0xb44cf912e9d0341e92f64f4a0642393b7f3526c4",
+    137: "0xb44cf912e9d0341e92f64f4a0642393b7f3526c4",
+    97: "0x041d49e52eaeef72b2c554a92ed665a268056b1d", 
+    80001: "0xb44cf912e9d0341e92f64f4a0642393b7f3526c4"
+  }
+  const tokenAddress = contractAddress[chainId];
   const tokenSymbol = 'PULL';
   const tokenDecimals = 18;
   let tokenImage = '';
@@ -102,7 +110,7 @@ export default function Home(props) {
         <Account triedToEagerConnect={triedToEagerConnect} />
         <ETHBalance />
         <FaucetDrip />
-        <AddToMetaMask contractAddress={data.contract_address}/>
+        <AddToMetaMask />
       </main>
       <small>
       <p>Donate BAN: <a href="ban:ban_1fundmhojrgz3fw4grh35kgh4671ho59fzauskqr76qi9bn3ae6pwwgadugt">ban_1fundmhojrgz3fw4grh35kgh4671ho59fzauskqr76qi9bn3ae6pwwgadugt</a></p>
@@ -240,10 +248,10 @@ export default function Home(props) {
 
 export async function getStaticProps(context) {
   const clientIP = await getClientIp();
-  console.log("Client IP in getStaticProps?",clientIP);
+  //console.log("Client IP in getStaticProps?",clientIP);
   return {
     props: {
-      contract_address: process.env.FAUCET_CONTRACT_ADDRESS  || "0x041D49e52EaEeF72B2c554a92ED665a268056b1d",
+      contract_address: "",
       ip_address: clientIP,
       updated: false
     }, // will be passed to the page component as props
