@@ -20,7 +20,7 @@ export const getClientIp = async () => await publicIp.v4({
 function AddToMetaMask(args) {
 
   const {account, chainId} = useWeb3React();
-  console.log(chainId);
+  //console.log(chainId);
   const contractAddress = {
     56: "0xb44cf912e9d0341e92f64f4a0642393b7f3526c4",
     137: "0xb44cf912e9d0341e92f64f4a0642393b7f3526c4",
@@ -104,7 +104,7 @@ export default function Home(props) {
       <main>
       <HeroImage/>
         <h1 className="title">
-          <Link href="https://bscscan.com/token/0xB44cf912E9D0341e92f64f4a0642393B7f3526C4"><a>Rug</a></Link> and Tug!
+          <Link href="https://rugpull.best"><a>Rug</a></Link> and Tug!
         </h1>
         <p className="description">100,000 PULL just for covering the gas fee! Connect your wallet to get started!
         </p>
