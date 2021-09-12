@@ -1,6 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import useContract from "../hooks/useContract";
 import FAUCET_ABI from "../lib/FaucetDrip.json";
+import AddToMetaMask from "./AddToMetamask";
 import { Button } from '@pancakeswap-libs/uikit'
 
 const FaucetDrip = () => {
@@ -24,10 +25,13 @@ const FaucetDrip = () => {
   console.log(contract);
   */
   if(typeof contract != "undefined") {
-    return (  
+    return (
+      <span>
       <Button onClick={() => { contract.faucetDrip(); }} variant="primary"> 
       Click here to PULL from the faucet!
       </Button>
+      <AddToMetaMask />
+      </span>
     );
   } else {
     return (
