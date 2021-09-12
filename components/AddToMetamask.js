@@ -1,7 +1,4 @@
 import { useWeb3React } from "@web3-react/core";
-import useContract from "../hooks/useContract";
-import FAUCET_ABI from "../lib/FaucetDrip.json";
-import { Button } from '@pancakeswap-libs/uikit'
 
 const AddToMetaMask = () => {
     const {account, chainId} = useWeb3React();
