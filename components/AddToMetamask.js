@@ -50,4 +50,4 @@ const AddToMetaMask = () => {
     )
 };
 
-export default FaucetDrip;
+export default AddToMetaMask;
