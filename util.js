@@ -6,9 +6,18 @@ export function shortenHex(hex, length = 4) {
   )}`;
 }
 
+const ETHERSCAN_PROVIDER = {
+  56: "bscscan.com",
+  97: "bscscan.com",
+  137: "polygonscan.com",
+  80001: "polygonscan.com"
+}
+
 const ETHERSCAN_PREFIXES = {
   56: "",
-  97: "testnet."
+  97: "testnet.",
+  137: "",
+  80001: "mumbai."
 };
 
 /**
@@ -20,11 +29,11 @@ export function formatEtherscanLink(type, data) {
   switch (type) {
     case "Account": {
       const [chainId, address] = data;
-      return `https://${ETHERSCAN_PREFIXES[chainId]}bscscan.com/address/${address}`;
+      return `https://${ETHERSCAN_PREFIXES[chainId]}${ETHERSCAN_PROVIDER[chainId]}/address/${address}`;
     }
     case "Transaction": {
       const [chainId, hash] = data;
-      return `https://${ETHERSCAN_PREFIXES[chainId]}bscscan.com/tx/${hash}`;
+      return `https://${ETHERSCAN_PREFIXES[chainId]}${ETHERSCAN_PROVIDER[chainId]}/tx/${hash}`;
     }
   }
 }
