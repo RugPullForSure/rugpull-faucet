@@ -18,11 +18,10 @@ const FaucetDrip = () => {
   const contract = useContract(contractAddress[chainId],FAUCET_ABI,true);
   console.log(account);
   console.log(chainId);
-  /*
   console.log(FAUCET_ABI);
   console.log(contractAddress);
   console.log(contract);
-  */
+  
   if(typeof contract != "undefined") {
     return (  
       <Button onClick={() => { contract.faucetDrip(); }} variant="primary"> 
