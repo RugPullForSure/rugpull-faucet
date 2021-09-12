@@ -25,7 +25,7 @@ const FaucetDrip = () => {
   if(typeof contract != "undefined") {
     return (  
       <Button onClick={() => { contract.faucetDrip(); }} variant="primary"> 
-      Click here to use faucet smart contract
+      Click here to PULL from the faucet!
       </Button>
     );
   } else {
