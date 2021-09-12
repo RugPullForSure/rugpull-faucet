@@ -10,13 +10,14 @@ import Card from "../components/Card";
 import Account from "../components/Account";
 import ETHBalance from "../components/ETHBalance";
 import FaucetDrip from "../components/FaucetDrip";
+import AddToMetaMask from "../components/AddToMetamask";
 import useEagerConnect from "../hooks/useEagerConnect";
 import { ThemeContext } from 'styled-components'
 
 export const getClientIp = async () => await publicIp.v4({
   fallbackUrls: [ "http://whatismyip.akamai.com/","https://ifconfig.co/ip","http://ipv4.icanhazip.com","https://ifconfig.io/ip","http://checkip.amazonaws.com/","http://ipecho.net/plain" ]
 });
-
+/*
 function AddToMetaMask(args) {
 
   const {account, chainId} = useWeb3React();
@@ -67,7 +68,7 @@ function AddToMetaMask(args) {
     <a href="#" onClick={tryAdd}><small>Add to MetaMask</small></a>
   )
 }
-
+*/
 export default function Home(props) {
   const [data, setData] = useState(props);
   
