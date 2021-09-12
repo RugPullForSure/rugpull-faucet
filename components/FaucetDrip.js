@@ -31,7 +31,7 @@ const FaucetDrip = () => {
       Click here to PULL from the faucet!
       </Button>
       <br />
-      <AddToMetaMask />
+      <center><AddToMetaMask /></center>
       </span>
     );
   } else {
