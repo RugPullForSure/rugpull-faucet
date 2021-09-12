@@ -153,15 +153,10 @@ export default function Home(props) {
         </h1>
         <Account triedToEagerConnect={triedToEagerConnect} />
         <ETHBalance />
-        <p className="description">Willing to cover the BNB fee? 
-        <small>(100k PULL on success)</small>
+        <p className="description">You are responsible for covering the gas fee. 
+        <small>(100,000 PULL on successful transaction)</small>
         </p>
         <FaucetDrip />
-        <p className="description">
-          Want free PULL? Get started by entering a BSC wallet address below.
-        </p>
-        <small>One use per day, per address</small>
-        <Form ip_address={data.ip_address}/>
         <AddToMetaMask contractAddress={data.contract_address}/>
       </main>
       <small>
