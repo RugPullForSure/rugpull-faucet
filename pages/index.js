@@ -20,6 +20,7 @@ export const getClientIp = async () => await publicIp.v4({
 function AddToMetaMask(args) {
 
   const {account, chainId} = useWeb3React();
+  console.log(chainId);
   const contractAddress = {
     56: "0xb44cf912e9d0341e92f64f4a0642393b7f3526c4",
     137: "0xb44cf912e9d0341e92f64f4a0642393b7f3526c4",
