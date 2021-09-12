@@ -4,7 +4,7 @@ import FAUCET_ABI from "../lib/FaucetDrip.json";
 import { Button } from '@pancakeswap-libs/uikit'
 
 const FaucetDrip = () => {
-  const { account } = useWeb3React();
+  const { account, chainId } = useWeb3React();
   // BSC Testnet
   //const contractAddress = "0x12DE85df2AD3127B9D441eeCCa409C0AdAF59edD";
   // BSC Mainnet
@@ -15,6 +15,7 @@ const FaucetDrip = () => {
   const contractAddress = "0xcEbF3C78849a95Be3398afc0d5832b0dDdE88cBB";
   const contract = useContract(contractAddress,FAUCET_ABI,true);
   console.log(account);
+  console.log(chainId);
   /*
   console.log(FAUCET_ABI);
   console.log(contractAddress);
