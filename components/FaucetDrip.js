@@ -30,6 +30,7 @@ const FaucetDrip = () => {
       <Button onClick={() => { contract.faucetDrip(); }} variant="primary"> 
       Click here to PULL from the faucet!
       </Button>
+      <br />
       <AddToMetaMask />
       </span>
     );
