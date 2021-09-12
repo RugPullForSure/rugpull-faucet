@@ -104,9 +104,9 @@ export default function Home(props) {
       <main>
       <HeroImage/>
         <h1 className="title">
-          <Link href="https://rugpull.best"><a>Rug</a></Link> and Tug!
+          <Link href="https://rugpull.best"><a>Rug</a></Link> and Tug faucet!
         </h1>
-        <p className="description">100,000 PULL just for covering the gas fee! Connect your wallet to get started!
+        <p className="description">100,000 PULL for the price of gas! Connect your wallet to get started!
         </p>
         <Account triedToEagerConnect={triedToEagerConnect} />
         <ETHBalance />
